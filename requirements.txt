@@ -1,0 +1,7 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+python-multipart==0.0.6
+mediapipe==0.10.35
+opencv-python==4.8.1.78
+numpy==1.26.4
+websockets==12.0

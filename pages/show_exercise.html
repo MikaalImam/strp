@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Exercise</title>
+    <link rel="stylesheet" href="/static_body/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Show Exercise</h1>
+
+        <div class="controls">
+            <button id="startBtn" class="btn btn-primary">Start Exercise Video</button>
+            <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+        </div>
+
+        <div class="video-container">
+            <img id="videoStream" src="" alt="Exercise video stream">
+            <div id="status" class="status">Ready to play exercise video...</div>
+        </div>
+
+        <div class="info-panel">
+            <h2>Exercise Details</h2>
+            <div class="info-item">
+                <span>Video:</span>
+                <span id="videoName" class="value">--</span>
+            </div>
+            <div class="info-item">
+                <span>Angle (degrees):</span>
+                <span id="angleValue" class="value">--</span>
+            </div>
+        </div>
+
+        <div class="controls" style="margin-top: 20px;">
+            <a class="btn btn-primary" href="/exercise-menu" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Back to Exercise Menu</a>
+        </div>
+    </div>
+
+    <script src="/static_body/show_exercise.js"></script>
+</body>
+</html>

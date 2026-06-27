@@ -10,28 +10,29 @@
     <div class="container">
         <h1>Show Exercise</h1>
 
-        <div class="controls">
-            <button id="startBtn" class="btn btn-primary">Start Exercise Video</button>
-            <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
-        </div>
-
         <div class="video-container">
-            <img id="videoStream" src="" alt="Exercise video stream">
-            <div id="status" class="status">Ready to play exercise video...</div>
+            <video id="videoStream" class="active" controls preload="metadata" playsinline></video>
+            <div id="status" class="status" style="display: none;">Ready to play exercise video...</div>
         </div>
 
         <div class="info-panel">
-            <h2>Exercise Details</h2>
-            <div class="info-item">
-                <span>Video:</span>
-                <span id="videoName" class="value">--</span>
-            </div>
-            <div class="info-item">
-                <span>Angle (degrees):</span>
-                <span id="angleValue" class="value">--</span>
-            </div>
-        </div>
+            <h3>Shoulder Abduction Instructions</h3>
 
+            <p>
+                Sit upright with your arms relaxed by your side and your palm facing toward you.
+                Slowly raise your arm out to the side while keeping your elbow straight.
+            </p>
+
+            <p>
+                Continue lifting until your arm reaches approximately shoulder height or slightly above.
+                The target shoulder abduction angle should be around <strong>100°–105°</strong>.
+            </p>
+
+            <p>
+                Keep your back straight, avoid leaning your body, and perform the movement in a slow,
+                controlled manner. Then slowly lower your arm back to the starting position.
+            </p>
+        </div>
         <div class="controls" style="margin-top: 20px;">
             <a class="btn btn-primary" href="/exercise-menu" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Back to Exercise Menu</a>
         </div>

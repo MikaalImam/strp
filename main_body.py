@@ -13,13 +13,14 @@ app = FastAPI()
 
 # Mount static files
 app.mount("/static_body", StaticFiles(directory="static_body"), name="static_body")
+app.mount("/exercises", StaticFiles(directory="exercises"), name="exercises")
 
 # Initialize hand detector
 detector = body_detector()
 
 
 def get_shoulder_abduction_video_path():
-    video_path = Path("exercises") / "shoulder_abduction.mp4"
+    video_path = Path("exercises") / "shoulder_abduction_with_angles.mp4"
     if video_path.exists() and video_path.is_file():
         return str(video_path)
     return None
@@ -110,7 +111,10 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.close()
 
 
+@app.websocket("/ws/exercise")
+@app.websocket("/ws/exercise/")
 @app.websocket("/ws/exercise/shoulder_abduction")
+@app.websocket("/ws/exercise/shoulder_abduction/")
 async def exercise_websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
 

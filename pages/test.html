@@ -3,16 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test</title>
-    <link rel="stylesheet" href="/static_body/navigation.css">
+    <title>Test Shoulder Abduction</title>
+    <link rel="stylesheet" href="/static_body/style.css">
 </head>
 <body>
-    <main class="menu-shell">
-        <section class="menu-card">
-            <h1>Test</h1>
-            <p class="subtitle">This page can be used for exercise testing mode.</p>
-            <a class="menu-btn" href="/exercise-menu">Back to Exercise Menu</a>
-        </section>
-    </main>
+    <div class="container">
+        <h1>Test Shoulder Abduction</h1>
+        
+        <div class="controls">
+            <button id="startBtn" class="btn btn-primary">Start</button>
+            <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+        </div>
+        
+        <div class="video-container">
+            <img id="videoStream" src="" alt="Video stream">
+            <div id="status" class="status">Waiting for connection...</div>
+        </div>
+        
+        <div class="info-panel">
+            <h2>Measurements</h2>
+            <div class="info-item">
+                <span>Angle (degrees):</span>
+                <span id="distanceValue" class="value">--</span>
+            </div>
+        </div>
+        <div class="controls" style="margin-top: 20px;">
+            <a class="btn btn-primary" href="/exercise-menu" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Back to Exercise Menu</a>
+        </div>
+
+    </div>
+    
+    <script src="/static_body/app.js"></script>
 </body>
 </html>

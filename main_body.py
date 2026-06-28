@@ -75,29 +75,20 @@ async def websocket_endpoint(websocket: WebSocket):
             frame = detector.draw_body_landmarks(frame, results)
             
             # Calculate angle
-            angle = detector.calc_angle_esh(frame, results)
-
-            if angle is not None:
-                cv2.putText(
-                    frame,
-                    f"Angle: {angle:.1f} deg",
-                    (10, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    1,
-                    (0, 255, 0),
-                    2,
-                )
+            angle_right = detector.calc_angle_esh_R(frame, results)
+            angle_left = detector.calc_angle_esh_L(frame, results)
 
 
             # Encode frame to JPEG
             ret, buffer = cv2.imencode('.jpg', frame)
             frame_base64 = base64.b64encode(buffer).decode()
             
-            # Send frame and distance data
             data = {
                 "frame": frame_base64,
-                "angle": angle
+                "angle_right": float(angle_right) if angle_right is not None else None,
+                "angle_left": float(angle_left) if angle_left is not None else None
             }            
+
             await websocket.send_json(data)
             
             # Small delay to control frame rate
@@ -144,18 +135,17 @@ async def exercise_websocket_endpoint(websocket: WebSocket):
 
             results, _ = detector.detect_body(frame)
             frame = detector.draw_body_landmarks(frame, results)
-            angle = detector.calc_angle_esh(frame, results)
+            angle_right = detector.calc_angle_esh_R(frame, results)
+            angle_left = detector.calc_angle_esh_L(frame, results)
 
-            angle_text = f"Angle: {angle:.1f} deg" if angle is not None else "Angle: --"
+            angle_text_right = f"Right Angle: {angle_right:.1f} deg" if angle_right is not None else "Right Angle: --"
+            angle_text_left = f"Left Angle: {angle_left:.1f} deg" if angle_left is not None else "Left Angle: --"
+
             cv2.putText(
-                frame,
-                angle_text,
-                (10, 30),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1,
-                (0, 255, 0),
-                2,
-            )
+                frame, angle_text_right, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, )
+
+            cv2.putText(
+                frame, angle_text_left, (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, )
 
             _, buffer = cv2.imencode('.jpg', frame)
             frame_base64 = base64.b64encode(buffer).decode()
@@ -163,7 +153,8 @@ async def exercise_websocket_endpoint(websocket: WebSocket):
             await websocket.send_json(
                 {
                     "frame": frame_base64,
-                    "angle": angle,
+                    "angle_right": angle_right,
+                    "angle_left": angle_left,
                     "video": Path(video_path).name,
                 }
             )

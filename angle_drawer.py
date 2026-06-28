@@ -43,17 +43,16 @@ def process_video(input_path: str, output_path: str) -> None:
 
             results, _ = detector.detect_body(frame)
             frame = detector.draw_body_landmarks(frame, results)
-            angle = detector.calc_angle_esh(frame, results)
+            angle_right = detector.calc_angle_esh_R(frame, results)
+            angle_left = detector.calc_angle_esh_L(frame, results)
 
-            angle_text = f"Angle: {angle:.1f} deg" if angle is not None else "Angle: --"
-            cv2.putText(
-                frame,
-                angle_text,
-                (10, 30),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1,
-                (0, 255, 0),
-                2,
+            angle_text_right = f"Right Angle: {angle_right:.1f} deg" if angle_right is not None else "Right Angle: --"
+            angle_text_left = f"Left Angle: {angle_left:.1f} deg" if angle_left is not None else "Left Angle: --"
+
+            cv2.putText( frame, angle_text_right, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,
+            )
+
+            cv2.putText( frame, angle_text_left, (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,
             )
 
             writer.write(frame)

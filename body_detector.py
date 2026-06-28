@@ -55,7 +55,7 @@ class body_detector:
         if results.pose_landmarks:
             pose_landmarks = results.pose_landmarks[0]
             h, w, _ = frame.shape
-            connections_show = [(11, 13),(11, 23)]
+            connections_show = [(11, 13),(11, 23),(12, 14),(12, 24)]
 
             for connection in connections_show:
                 start_idx, end_idx = connection
@@ -76,7 +76,7 @@ class body_detector:
 
         return frame
     
-    def calc_angle_esh(self, frame, results):
+    def calc_angle_esh_R(self, frame, results):
         if results.pose_landmarks:
             pose_landmarks = results.pose_landmarks[0]
             h, w, _ = frame.shape
@@ -112,6 +112,44 @@ class body_detector:
                 return angle_deg
             
         return None
+    
+    def calc_angle_esh_L(self, frame, results):
+        if results.pose_landmarks:
+            pose_landmarks = results.pose_landmarks[0]
+            h, w, _ = frame.shape
+            
+            # Get relevant landmarks
+            right_shoulder = pose_landmarks[12]
+            right_elbow = pose_landmarks[14]
+            right_hip = pose_landmarks[24]
+
+            if not self._landmarks_are_visible(right_shoulder, right_elbow, right_hip):
+                return None
+            
+            # Convert to pixel coordinates
+            shoulder_point = (int(right_shoulder.x * w), int(right_shoulder.y * h))
+            elbow_point = (int(right_elbow.x * w), int(right_elbow.y * h))
+            hip_point = (int(right_hip.x * w), int(right_hip.y * h))
+            
+            # Calculate vectors as numpy arrays
+            shoulder_to_elbow = np.array(elbow_point) - np.array(shoulder_point)
+            shoulder_to_hip = np.array(hip_point) - np.array(shoulder_point)
+
+            # Calculate angle using dot product
+            dot_product = float(np.dot(shoulder_to_elbow, shoulder_to_hip))
+
+            se_length = float(np.linalg.norm(shoulder_to_elbow))
+            sh_length = float(np.linalg.norm(shoulder_to_hip))
+            
+            if se_length > 0 and sh_length > 0:
+                cos_theta = dot_product / (se_length * sh_length)
+                cos_theta = max(-1.0, min(1.0, cos_theta))
+                angle_rad = math.acos(cos_theta)
+                angle_deg = math.degrees(angle_rad)
+                return angle_deg
+            
+        return None
+
 
     def _landmarks_are_visible(self, *landmarks):
         for landmark in landmarks:

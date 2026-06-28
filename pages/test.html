@@ -15,16 +15,31 @@
             <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
         </div>
         
-        <div class="video-container">
-            <img id="videoStream" src="" alt="Video stream">
-            <div id="status" class="status">Waiting for connection...</div>
+        <div class="video-wrapper">
+            <div class="side-rectangle left-rectangle" id="leftRectangle">
+                Left
+            </div>
+
+            <div class="video-container">
+                <img id="videoStream" src="" alt="Video stream">
+                <div id="status" class="status">Waiting for connection...</div>
+            </div>
+
+            <div class="side-rectangle right-rectangle" id="rightRectangle">
+                Right
+            </div>
+
         </div>
-        
+            
         <div class="info-panel">
             <h2>Measurements</h2>
             <div class="info-item">
-                <span>Angle (degrees):</span>
-                <span id="distanceValue" class="value">--</span>
+                <span>Right Angle (degrees):</span>
+                <span id="angleValueRight" class="value">--</span>
+            </div>
+            <div class="info-item">
+                <span>Left Angle (degrees):</span>
+                <span id="angleValueLeft" class="value">--</span>
             </div>
         </div>
         <div class="controls" style="margin-top: 20px;">

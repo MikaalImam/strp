@@ -20,10 +20,25 @@
                 Left
             </div>
 
-            <div class="video-container">
+            <!-- <div class="video-container">
                 <img id="videoStream" src="" alt="Video stream">
                 <div id="status" class="status">Waiting for connection...</div>
-            </div>
+            </div> -->
+            
+
+            <div class="video-container">
+    <!-- Reference pose overlay -->
+    <img
+        id="poseOverlay"
+        src="/static_body/images/overlay.png"
+        alt="Reference Pose"
+    >
+
+    <!-- Live camera feed -->
+    <img id="videoStream" src="" alt="Video stream">
+
+    <div id="status" class="status">Waiting for connection...</div>
+</div>
 
             <div class="side-rectangle right-rectangle" id="rightRectangle">
                 Right
@@ -51,3 +66,36 @@
     <script src="/static_body/app.js"></script>
 </body>
 </html>
+
+<style>
+.video-container {
+    position: relative;
+    overflow: hidden;
+}
+
+#videoStream {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#poseOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;     /* or 'cover' depending on your image */
+    opacity: 0.35;           /* Adjust transparency */
+    z-index: 2;
+
+    pointer-events: none;    /* Allow clicks through */
+}
+
+#status {
+    position: absolute;
+    z-index: 3;
+}
+</style>

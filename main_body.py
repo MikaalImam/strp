@@ -48,6 +48,10 @@ async def get_test_page():
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
+
+    detector.reset_arm_targets()
+    
+
     cap = cv2.VideoCapture(0)
     
     if not cap.isOpened():
@@ -73,6 +77,9 @@ async def websocket_endpoint(websocket: WebSocket):
             
             # Draw landmarks
             frame = detector.draw_body_landmarks(frame, results)
+            # frame = detector.silhouette(frame, results) #not feeling as uselfull
+            frame = detector.draw_progressive_arm_target(frame, results, side="left")
+            frame = detector.draw_progressive_arm_target(frame, results, side="right")
             
             # Calculate angle
             angle_right = detector.calc_angle_esh_R(frame, results)

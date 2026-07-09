@@ -57,13 +57,13 @@ class body_detector:
         # Progressive target zone settings
         self.target_step = 10
         self.target_start_offset = 5
-        self.target_zone_size = 15 #the size of the target zone in degrees
+        self.target_zone_size = 15  #the size of the target zone in degrees
 
         self.final_min_angle = 95
         self.final_max_angle = 105
         self.reset_below_angle = 20
 
-        self.required_hold_frames = 5
+        self.required_hold_frames = 45
 
         self.arm_targets = {
             "left": {
@@ -113,6 +113,25 @@ class body_detector:
                 cv2.circle(frame, end_point, 5, (0, 0, 255), -1)
 
         return frame
+
+    def _landmarks_are_visible(self, *landmarks):
+        for landmark in landmarks:
+            visibility = getattr(landmark, "visibility", 1.0)
+            presence = getattr(landmark, "presence", 1.0)
+
+            if visibility < self.min_landmark_visibility:
+                return False
+
+            if presence < self.min_landmark_visibility:
+                return False
+
+        return True
+        
+    def landmark_to_point(self, landmark, w, h):
+        return (
+            int(landmark.x * w),
+            int(landmark.y * h)
+        )
     
     def calc_angle_esh_R(self, frame, results):
         if results.pose_landmarks:
@@ -123,23 +142,24 @@ class body_detector:
             left_shoulder = pose_landmarks[11]
             left_elbow = pose_landmarks[13]
             left_hip = pose_landmarks[23]
+            left_wrist = pose_landmarks[15]
 
-            if not self._landmarks_are_visible(left_shoulder, left_elbow, left_hip):
+            if not self._landmarks_are_visible(left_shoulder, left_wrist, left_hip):
                 return None
             
             # Convert to pixel coordinates
-            shoulder_point = (int(left_shoulder.x * w), int(left_shoulder.y * h))
-            elbow_point = (int(left_elbow.x * w), int(left_elbow.y * h))
-            hip_point = (int(left_hip.x * w), int(left_hip.y * h))
-            
+            shoulder_point = self.landmark_to_point(left_shoulder, w, h)
+            wrist_point = self.landmark_to_point(left_wrist, w, h)
+            hip_point = self.landmark_to_point(left_hip, w, h)
+
             # Calculate vectors as numpy arrays
-            shoulder_to_elbow = np.array(elbow_point) - np.array(shoulder_point)
+            shoulder_to_wrist = np.array(wrist_point) - np.array(shoulder_point)
             shoulder_to_hip = np.array(hip_point) - np.array(shoulder_point)
 
             # Calculate angle using dot product
-            dot_product = float(np.dot(shoulder_to_elbow, shoulder_to_hip))
+            dot_product = float(np.dot(shoulder_to_wrist, shoulder_to_hip))
 
-            se_length = float(np.linalg.norm(shoulder_to_elbow))
+            se_length = float(np.linalg.norm(shoulder_to_wrist))
             sh_length = float(np.linalg.norm(shoulder_to_hip))
             
             if se_length > 0 and sh_length > 0:
@@ -160,23 +180,24 @@ class body_detector:
             right_shoulder = pose_landmarks[12]
             right_elbow = pose_landmarks[14]
             right_hip = pose_landmarks[24]
+            right_wrist = pose_landmarks[16]
 
-            if not self._landmarks_are_visible(right_shoulder, right_elbow, right_hip):
+            if not self._landmarks_are_visible(right_shoulder, right_wrist, right_hip):
                 return None
             
             # Convert to pixel coordinates
-            shoulder_point = (int(right_shoulder.x * w), int(right_shoulder.y * h))
-            elbow_point = (int(right_elbow.x * w), int(right_elbow.y * h))
-            hip_point = (int(right_hip.x * w), int(right_hip.y * h))
-            
+            shoulder_point = self.landmark_to_point(right_shoulder, w, h)
+            wrist_point = self.landmark_to_point(right_wrist, w, h)
+            hip_point = self.landmark_to_point(right_hip, w, h)
+
             # Calculate vectors as numpy arrays
-            shoulder_to_elbow = np.array(elbow_point) - np.array(shoulder_point)
+            shoulder_to_wrist = np.array(wrist_point) - np.array(shoulder_point)
             shoulder_to_hip = np.array(hip_point) - np.array(shoulder_point)
 
             # Calculate angle using dot product
-            dot_product = float(np.dot(shoulder_to_elbow, shoulder_to_hip))
+            dot_product = float(np.dot(shoulder_to_wrist, shoulder_to_hip))
 
-            se_length = float(np.linalg.norm(shoulder_to_elbow))
+            se_length = float(np.linalg.norm(shoulder_to_wrist))
             sh_length = float(np.linalg.norm(shoulder_to_hip))
             
             if se_length > 0 and sh_length > 0:
@@ -188,25 +209,42 @@ class body_detector:
             
         return None
 
+    def arms_straight(self, frame, results):
+        if results.pose_landmarks:
+            pose_landmarks = results.pose_landmarks[0]
+            h, w, _ = frame.shape
+            
+            # Get relevant landmarks
+            left_shoulder = pose_landmarks[11]
+            left_elbow = pose_landmarks[13]
+            left_wrist = pose_landmarks[15]
 
-    def _landmarks_are_visible(self, *landmarks):
-        for landmark in landmarks:
-            visibility = getattr(landmark, "visibility", 1.0)
-            presence = getattr(landmark, "presence", 1.0)
+            right_shoulder = pose_landmarks[12]
+            right_elbow = pose_landmarks[14]
+            right_wrist = pose_landmarks[16]
 
-            if visibility < self.min_landmark_visibility:
+            if not self._landmarks_are_visible(left_shoulder, left_elbow, left_wrist,
+                                               right_shoulder, right_elbow, right_wrist):
                 return False
+            
+            # Convert to pixel coordinates
+            left_shoulder_point = self.landmark_to_point(left_shoulder, w, h)
+            left_elbow_point = self.landmark_to_point(left_elbow, w, h)
+            left_wrist_point = self.landmark_to_point(left_wrist, w, h)
 
-            if presence < self.min_landmark_visibility:
-                return False
+            right_shoulder_point = self.landmark_to_point(right_shoulder, w, h)
+            right_elbow_point = self.landmark_to_point(right_elbow, w, h)
+            right_wrist_point = self.landmark_to_point(right_wrist, w, h)
 
-        return True
-        
-    def landmark_to_point(self, landmark, w, h):
-        return (
-            int(landmark.x * w),
-            int(landmark.y * h)
-        )
+            # Calculate angles for both arms
+            left_angle = self.calc_angle_esh_L(frame, results)
+            right_angle = self.calc_angle_esh_R(frame, results)
+
+            # Check if both arms are straight (angle close to 180 degrees)
+            if left_angle is not None and right_angle is not None:
+                return abs(left_angle - 180) < 15 and abs(right_angle - 180) < 15
+            
+        return False
 
     def update_arm_target_zone(self, side, current_angle):
         if current_angle is None:
@@ -352,6 +390,19 @@ class body_detector:
         )
 
         if arm_length <= 0:
+            return frame
+        
+        arm_straight = self.arms_straight(frame, results)
+        if not arm_straight:
+            cv2.putText(
+                frame,
+                "Please straighten your arms",
+                (30, 40 if side == "left" else 80),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.8,
+                (0, 0, 255),
+                2
+            )
             return frame
 
         lower_angle, upper_angle, completed = self.update_arm_target_zone(

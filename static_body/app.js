@@ -42,7 +42,7 @@ function startWebcam() {
         isConnected = true;
         startBtn.disabled = true;
         stopBtn.disabled = false;
-        status.textContent = 'Streaming...';
+        status.style.display = 'none';
     };
     
     ws.onmessage = (event) => {
@@ -75,6 +75,7 @@ function startWebcam() {
 
     ws.onerror = (error) => {
         console.error('WebSocket error:', error);
+        status.style.display = 'block';
         status.textContent = 'Connection error';
     };
     
@@ -84,6 +85,8 @@ function startWebcam() {
     startBtn.disabled = false;
     stopBtn.disabled = true;
     videoStream.classList.remove('active');
+
+    status.style.display = 'block';
     status.textContent = 'Connection closed';
 
     angleValueRight.textContent = '--';

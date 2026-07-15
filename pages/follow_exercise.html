@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follow Pose Exercise</title>
+    <link rel="stylesheet" href="/static_body/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Follow Pose Exercise</h1>
+
+        <div class="controls">
+            <select id="exerciseSelect" style="padding: 12px; border-radius: 8px; border: 1px solid #ddd; min-width: 280px;"></select>
+            <button id="startBtn" class="btn btn-primary">Start</button>
+            <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+            <button id="restartBtn" class="btn btn-primary" disabled>Restart</button>
+        </div>
+
+        <div class="video-container">
+            <img id="videoStream" src="" alt="Video stream">
+            <div id="status" class="status">Load an exercise and press Start.</div>
+        </div>
+
+        <div class="info-panel">
+            <h2>Follow Status</h2>
+            <div class="info-item">
+                <span>State:</span>
+                <span id="stateValue" class="value">Idle</span>
+            </div>
+            <div class="info-item">
+                <span>Step:</span>
+                <span id="stepValue" class="value">--</span>
+            </div>
+            <div class="info-item">
+                <span>Match:</span>
+                <span id="matchValue" class="value">--</span>
+            </div>
+        </div>
+
+        <div class="controls" style="margin-top: 20px;">
+            <a id="backBtn" class="btn btn-primary" href="/" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Back to Home</a>
+        </div>
+    </div>
+
+    <script src="/static_body/follow_exercise.js"></script>
+</body>
+</html>

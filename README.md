@@ -9,6 +9,7 @@ A real-time hand distance measurement web application built with FastAPI, MediaP
 ✅ Live video stream in browser  
 ✅ Clean, responsive UI  
 ✅ No external dependencies except Python packages  
+✅ In-browser hand exercise recording and guided follow mode  
 
 ## Tech Stack
 
@@ -96,6 +97,14 @@ mp_test/
   "height": 480
 }
 ```
+
+### Pose exercise endpoints
+
+- `GET /record-pose-exercise` — UI to record custom pose exercise keyframes.
+- `GET /follow-pose-exercise` — UI to follow a recorded pose exercise.
+- `GET /api/pose-exercises` — list saved exercise names.
+- `WS /ws/pose/record` — live webcam stream + record/save control.
+- `WS /ws/pose/follow/{exercise_name}` — guided follow stream for a saved exercise.
 
 ## Requirements
 

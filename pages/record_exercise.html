@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Pose Exercise</title>
+    <link rel="stylesheet" href="/static_body/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Record Pose Exercise</h1>
+
+        <div class="controls">
+            <button id="startBtn" class="btn btn-primary">Start Camera</button>
+            <button id="stopBtn" class="btn btn-danger" disabled>Stop Camera</button>
+        </div>
+
+        <div class="controls">
+            <button id="recordBtn" class="btn btn-primary" disabled>Start Recording</button>
+            <button id="clearBtn" class="btn btn-danger" disabled>Clear</button>
+        </div>
+
+        <div class="controls">
+            <input id="exerciseName" type="text" placeholder="Exercise name (optional)" style="padding: 12px; border-radius: 8px; border: 1px solid #ddd; width: 280px;">
+            <button id="saveBtn" class="btn btn-primary" disabled>Save Exercise</button>
+        </div>
+
+        <div class="video-container">
+            <img id="videoStream" src="" alt="Video stream">
+            <div id="status" class="status">Waiting for connection...</div>
+        </div>
+
+        <div class="info-panel">
+            <h2>Recording Status</h2>
+            <div class="info-item">
+                <span>Mode:</span>
+                <span id="recordingState" class="value">Idle</span>
+            </div>
+            <div class="info-item">
+                <span>Keyframes:</span>
+                <span id="keyframeCount" class="value">0</span>
+            </div>
+            <div class="info-item">
+                <span>Elapsed:</span>
+                <span id="elapsedTime" class="value">0.0s</span>
+            </div>
+            <div class="info-item">
+                <span>Last Event:</span>
+                <span id="lastEvent" class="value">--</span>
+            </div>
+        </div>
+
+        <div class="controls" style="margin-top: 20px;">
+            <a id="backBtn" class="btn btn-primary" href="/" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Back to Home</a>
+        </div>
+    </div>
+
+    <script src="/static_body/record_exercise.js"></script>
+</body>
+</html>
